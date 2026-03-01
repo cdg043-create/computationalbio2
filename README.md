@@ -6312,3 +6312,417 @@ show_pic(blended)
 
 ```
 
+##  Aspect Detection  
+
+```python
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline
+```
+
+
+```python
+flat_chess = cv2.imread("chessboard_green.jpg")
+flat_chess = cv2.cvtColor(flat_chess, cv2.COLOR_BGR2RGB)
+plt.imshow(flat_chess)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f2eeb310ad0>
+
+
+
+
+![png](output_1_1.png)
+<img width="250" height="252" alt="output_1_1" src="https://github.com/user-attachments/assets/631e5571-0106-4da1-a7cf-88f44cc21ae1" />
+
+
+
+```python
+gray_flat_chess = cv2.cvtColor(flat_chess, cv2.COLOR_BGR2GRAY)
+plt.imshow(gray_flat_chess, cmap = "gray")
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f2eeb27d190>
+
+
+
+
+![png](output_2_1.png)
+<img width="250" height="252" alt="output_2_1" src="https://github.com/user-attachments/assets/b06fe282-16eb-4dce-a353-7461d173894d" />
+
+
+
+```python
+real_chess = cv2.imread("chess.jpg")
+real_chess = cv2.cvtColor(real_chess, cv2.COLOR_BGR2RGB)
+```
+
+
+```python
+plt.imshow(real_chess)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f2eeb225190>
+
+
+
+
+![png](output_4_1.png)
+<img width="343" height="252" alt="output_4_1" src="https://github.com/user-attachments/assets/f2f5bffe-df78-49b3-80c4-68194faa436c" />
+
+
+
+```python
+gray_real_chess = cv2.cvtColor(real_chess, cv2.COLOR_BGR2GRAY)
+plt.imshow(gray_real_chess, cmap = "gray")
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f2eea207710>
+
+
+
+
+![png](output_5_1.png)
+<img width="343" height="252" alt="output_5_1" src="https://github.com/user-attachments/assets/85a8c7b9-eb58-4bd6-b992-f49b68d46165" />
+
+
+
+```python
+gray = np.float32(gray_flat_chess)
+dst = cv2.cornerHarris(src = gray, blockSize = 2, ksize = 3, k = 0.04)
+
+dst = cv2.dilate(dst, None)
+```
+
+
+```python
+flat_chess[dst>0.01*dst.max()] = [255,0,0]
+
+plt.imshow(flat_chess)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f2ee91c6b10>
+
+
+
+
+![png](output_7_1.png)
+<img width="250" height="252" alt="output_7_1" src="https://github.com/user-attachments/assets/19d8434a-64a3-44a9-be6c-359888cc50a4" />
+
+
+
+```python
+gray = np.float32(gray_real_chess)
+dst = cv2.cornerHarris(src = gray, blockSize =2, ksize =3, k=0.04)
+dst = cv2.dilate(dst, None)
+
+real_chess[dst>0.01*dst.max()] = [255, 0, 0]
+
+plt.imshow(real_chess)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f2eea1ff0d0>
+
+
+
+
+![png](output_8_1.png)
+<img width="343" height="252" alt="output_8_1" src="https://github.com/user-attachments/assets/6a2c5016-602b-4e91-bde9-dd1abd85b053" />
+
+
+
+```python
+#Shi-Tomasi Corner Detection
+
+corners = cv2.goodFeaturesToTrack(gray_flat_chess, 64, 0.01, 10)
+```
+
+
+```python
+corners = np.int0(corners)
+
+for i in corners:
+    x,y = i.ravel()
+    cv2.circle(flat_chess, (x,y),3,(255,0,0), -1)
+    
+plt.imshow(flat_chess)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f2ee91da050>
+
+
+
+
+![png](output_10_1.png)
+<img width="250" height="252" alt="output_10_1" src="https://github.com/user-attachments/assets/cc90f923-396c-472d-b81f-efcf771da53d" />
+
+
+```python
+corners = cv2.goodFeaturesToTrack(gray_real_chess, 100, 0.01, 10)
+
+corners = np.int0(corners)
+
+for i in corners:
+    x, y = i.ravel()
+    cv2.circle(real_chess, (x,y), 3, (0,255,0), -1)
+    
+plt.imshow(real_chess)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f2ee9094b10>
+
+
+
+
+![png](output_11_1.png)
+<img width="343" height="252" alt="output_11_1" src="https://github.com/user-attachments/assets/4b899ca0-df19-4f7d-bcdb-ea10c365d4b3" />
+
+
+
+```python
+
+```
+```python
+import cv2
+```
+
+
+```python
+import numpy as np
+```
+
+
+```python
+import matplotlib.pyplot as plt
+%matplotlib inline
+```
+
+
+```python
+img = cv2.imread("punch.jpg")
+plt.imshow(img)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f74079f1650>
+
+
+
+
+![png](output_3_1.png)
+<img width="375" height="223" alt="output_3_1" src="https://github.com/user-attachments/assets/9f142c00-a494-4ba0-9af3-e0a047a913f8" />
+
+
+
+```python
+edges = cv2.Canny(image =img, threshold1 = 127, threshold2 = 127)
+plt.imshow(edges)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f74079ace10>
+
+
+
+
+![png](output_4_1.png)
+<img width="375" height="223" alt="output_4_1" src="https://github.com/user-attachments/assets/5b78c73c-1a03-4cac-9429-d70034b6e95b" />
+
+
+
+```python
+med_value = np.median(img)
+med_value
+```
+
+
+
+
+    122.0
+
+
+
+
+```python
+lower = int(max(0, 0.7*med_value))
+upper = int(min(255,1.3*med_value))
+
+edges = cv2.Canny(img, threshold1 = lower, threshold2 = upper)
+
+plt.imshow(edges)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f7404926950>
+
+
+
+
+![png](output_6_1.png)
+<img width="375" height="223" alt="output_6_1" src="https://github.com/user-attachments/assets/1376db89-fd58-4891-b430-c5c6762d6e37" />
+
+
+
+```python
+edges = cv2.Canny(image = img, threshold1 = lower, threshold2 = upper +100)
+
+plt.imshow(edges)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f740482e510>
+
+
+
+
+![png](output_7_1.png)
+<img width="375" height="223" alt="output_7_1" src="https://github.com/user-attachments/assets/b5f05b95-71f7-4a4f-a29d-52f43fd12398" />
+
+
+
+```python
+blurred_img = cv2.blur(img, ksize = (5,5))
+
+edges = cv2.Canny(image=blurred_img,
+                 threshold1 = lower,
+                 threshold2 = upper)
+plt.imshow(edges)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f7404796850>
+
+
+
+
+![png](output_8_1.png)
+<img width="375" height="223" alt="output_8_1" src="https://github.com/user-attachments/assets/bf5552e1-9759-47ba-b297-3d6b23d75256" />
+
+
+
+```python
+blurred_img = cv2.blur(img, ksize = (7,7))
+
+edges = cv2.Canny(image=blurred_img,
+                 threshold1 = lower,
+                 threshold2 = upper)
+plt.imshow(edges)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f74047057d0>
+
+
+
+
+![png](output_9_1.png)
+<img width="375" height="223" alt="output_9_1" src="https://github.com/user-attachments/assets/b4d511c8-01ad-45ed-9767-e553b5b33bcf" />
+
+
+
+```python
+blurred_img = cv2.blur(img, ksize = (5,5))
+
+edges = cv2.Canny(image=blurred_img,
+                 threshold1 = lower,
+                 threshold2 = upper +50)
+plt.imshow(edges)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f7404677790>
+
+
+
+
+![png](output_10_1.png)
+<img width="375" height="223" alt="output_10_1" src="https://github.com/user-attachments/assets/1a383acc-c53a-4b13-bf9b-d706032fa4e7" />
+
+
+
+```python
+blurred_img = cv2.blur(img, ksize = (1,1))
+
+edges = cv2.Canny(image=blurred_img,
+                 threshold1 = lower,
+                 threshold2 = upper + 2)
+plt.imshow(edges)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f740417bcd0>
+
+
+
+
+![png](output_11_1.png)
+<img width="375" height="223" alt="output_11_1" src="https://github.com/user-attachments/assets/19590aca-fcc2-40d3-9c4c-cfbc8d5c3577" />
+
+
+
+```python
+blurred_img = cv2.blur(img, ksize = (1,1))
+
+edges = cv2.Canny(image=blurred_img,
+                 threshold1 = lower,
+                 threshold2 = upper -50)
+plt.imshow(edges)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f7404055c90>
+
+
+
+
+![png](output_12_1.png)
+<img width="375" height="223" alt="output_12_1" src="https://github.com/user-attachments/assets/54d43f44-cf8f-414e-9827-956de4eea9cd" />
+
+
+
+```python
+
+```
