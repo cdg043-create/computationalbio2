@@ -5285,3 +5285,283 @@ for alignment in blast_record.alignments:
 ```python
 
 ```
+
+```python
+from Bio import Entrez
+
+Entrez.email = "cdg043@email.latech.edu"
+
+handle = Entrez.efetch(
+    db="nucleotide",
+    id="NM_004985.5",  # KRAS mRNA
+    rettype="fasta",
+    retmode="text"
+)
+
+sequence = handle.read()
+
+with open("KRAS.fasta", "w") as f:
+    f.write(sequence)
+    
+print("KRAS.fasta downloaded")
+```
+
+    KRAS.fasta downloaded
+
+
+
+```python
+from Bio import Entrez
+
+Entrez.email = "cdg043@email.latech.edu"  # REQUIRED by NCBI
+
+handle = Entrez.efetch(
+    db="nucleotide",
+    id="NM_004985.5",  # KRAS mRNA
+    rettype="fasta",
+    retmode="text"
+)
+
+sequence = handle.read()
+
+with open("KRAS.fasta", "w") as f:
+    f.write(sequence)
+    
+print("KRAS.fasta downloaded successfully")
+```
+
+    KRAS.fasta downloaded successfully
+
+
+
+```python
+import os
+print(os.path.exists("KRAS.fasta"))
+```
+
+    True
+
+
+
+```python
+from Bio.Blast.Applications import NcbiblastnCommandline
+
+blastn_cline = NcbiblastnCommandline(
+    query="KRAS.fasta",
+    db="your_database_prefix",
+    out="kras_blast.xml",
+    outfmt=5
+)
+
+stdout, stderr = blastn_cline()
+print(stderr)
+```
+
+
+    ---------------------------------------------------------------------------
+
+    ApplicationError                          Traceback (most recent call last)
+
+    <ipython-input-15-010b2a61c6bf> in <module>
+          8 )
+          9 
+    ---> 10 stdout, stderr = blastn_cline()
+         11 print(stderr)
+
+
+    ~/anaconda3/lib/python3.7/site-packages/Bio/Application/__init__.py in __call__(self, stdin, stdout, stderr, cwd, env)
+        572 
+        573         if return_code:
+    --> 574             raise ApplicationError(return_code, str(self), stdout_str, stderr_str)
+        575         return stdout_str, stderr_str
+        576 
+
+
+    ApplicationError: Non-zero return code 127 from 'blastn -out kras_blast.xml -outfmt 5 -query KRAS.fasta -db your_database_prefix', message '/bin/sh: 1: blastn: not found'
+
+
+
+```python
+from Bio.Blast.Applications import NcbimakeblastdbCommandline
+
+make_db = NcbimakeblastdbCommandline(
+    input_file="m_cold.fasta",  # <-- database FASTA
+    dbtype="nucl",
+    out="localdb"               # <-- database prefix name
+)
+
+stdout, stderr = make_db()
+print("makeblastdb stderr:\n", stderr)
+```
+
+
+    ---------------------------------------------------------------------------
+
+    ApplicationError                          Traceback (most recent call last)
+
+    <ipython-input-11-0e5f290b21b5> in <module>
+          7 )
+          8 
+    ----> 9 stdout, stderr = make_db()
+         10 print("makeblastdb stderr:\n", stderr)
+
+
+    ~/anaconda3/lib/python3.7/site-packages/Bio/Application/__init__.py in __call__(self, stdin, stdout, stderr, cwd, env)
+        572 
+        573         if return_code:
+    --> 574             raise ApplicationError(return_code, str(self), stdout_str, stderr_str)
+        575         return stdout_str, stderr_str
+        576 
+
+
+    ApplicationError: Non-zero return code 127 from 'makeblastdb -out localdb -dbtype nucl -in m_cold.fasta', message '/bin/sh: 1: makeblastdb: not found'
+
+
+
+```python
+from Bio.Blast import NCBIWWW
+from Bio import SeqIO
+
+# Read your FASTA file
+record = SeqIO.read("KRAS.fasta", format="fasta")
+sequence = record.seq
+
+print("Running BLAST search on NCBI... This may take a few minutes.")
+
+# Run BLAST online (blastn against nucleotide database)
+result_handle = NCBIWWW.qblast(
+    program="blastn",
+    database="nt",
+    sequence=sequence,
+    hitlist_size=50,
+    expect=1e-5
+)
+
+# Save results as XML
+with open("kras_blast.xml", "w") as out_handle:
+    out_handle.write(result_handle.read())
+
+result_handle.close()
+
+print("BLAST complete. Results saved as kras_blast.xml")
+```
+
+    Running BLAST search on NCBI... This may take a few minutes.
+    BLAST complete. Results saved as kras_blast.xml
+
+
+
+```python
+from Bio.Blast import NCBIXML
+
+# Open the BLAST results file
+result_handle = open("kras_blast.xml")
+blast_record = NCBIXML.read(result_handle)
+
+print("Top 5 BLAST Hits:\n")
+
+for alignment in blast_record.alignments[:5]:
+    for hsp in alignment.hsps:
+        print("Title:", alignment.title)
+        print("Length:", alignment.length)
+        print("E-value:", hsp.expect)
+        print("Score:", hsp.score)
+        print("-" * 60)
+        break
+```
+
+    Top 5 BLAST Hits:
+    
+    Title: gi|1621309831|ref|NM_004985.5| Homo sapiens KRAS proto-oncogene, GTPase (KRAS), transcript variant b, mRNA
+    Length: 5306
+    E-value: 0.0
+    Score: 10612.0
+    ------------------------------------------------------------
+    Title: gi|1621310586|ref|NM_001369787.1| Homo sapiens KRAS proto-oncogene, GTPase (KRAS), transcript variant d, mRNA
+    Length: 5293
+    E-value: 0.0
+    Score: 10555.0
+    ------------------------------------------------------------
+    Title: gi|1815608|gb|M54968.1|HUMKRASM Homo sapiens K-ras oncogene protein (KRAS) mRNA, complete cds
+    Length: 5775
+    E-value: 0.0
+    Score: 10250.0
+    ------------------------------------------------------------
+    Title: gi|2697689178|ref|XM_528758.9| PREDICTED: Pan troglodytes KRAS proto-oncogene, GTPase (KRAS), transcript variant X2, mRNA
+    Length: 5525
+    E-value: 0.0
+    Score: 10169.0
+    ------------------------------------------------------------
+    Title: gi|2694312324|ref|XM_057299487.2| PREDICTED: Pan paniscus KRAS proto-oncogene, GTPase (KRAS), transcript variant X2, mRNA
+    Length: 5385
+    E-value: 0.0
+    Score: 10120.0
+    ------------------------------------------------------------
+
+
+
+```python
+for alignment in blast_record.alignments[:3]:  # top 3 hits
+    
+    print("TITLE:", alignment.title)
+    print("LENGTH:", alignment.length)
+    
+    for hsp in alignment.hsps:
+        print("E-value:", hsp.expect)
+        print("Score:", hsp.score)
+        print("Identities:", hsp.identities)
+        print("\nAlignment:")
+        
+        print("Query: ", hsp.query[:75])
+        print("       ", hsp.match[:75])
+        print("Sbjct: ", hsp.sbjct[:75])
+        
+        print("\n" + "-"*70 + "\n")
+        break
+```
+
+    TITLE: gi|1621309831|ref|NM_004985.5| Homo sapiens KRAS proto-oncogene, GTPase (KRAS), transcript variant b, mRNA
+    LENGTH: 5306
+    E-value: 0.0
+    Score: 10612.0
+    Identities: 5306
+    
+    Alignment:
+    Query:  CTAGGCGGCGGCCGCGGCGGCGGAGGCAGCAGCGGCGGCGGCAGTGGCGGCGGCGAAGGTGGCGGCGGCTCGGCC
+            |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+    Sbjct:  CTAGGCGGCGGCCGCGGCGGCGGAGGCAGCAGCGGCGGCGGCAGTGGCGGCGGCGAAGGTGGCGGCGGCTCGGCC
+    
+    ----------------------------------------------------------------------
+    
+    TITLE: gi|1621310586|ref|NM_001369787.1| Homo sapiens KRAS proto-oncogene, GTPase (KRAS), transcript variant d, mRNA
+    LENGTH: 5293
+    E-value: 0.0
+    Score: 10555.0
+    Identities: 5293
+    
+    Alignment:
+    Query:  CTAGGCGGCGGCCGCGGCGGCGGAGGCAGCAGCGGCGGCGGCAGTGGCGGCGGCGAAGGTGGCGGCGGCTCGGCC
+            |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+    Sbjct:  CTAGGCGGCGGCCGCGGCGGCGGAGGCAGCAGCGGCGGCGGCAGTGGCGGCGGCGAAGGTGGCGGCGGCTCGGCC
+    
+    ----------------------------------------------------------------------
+    
+    TITLE: gi|1815608|gb|M54968.1|HUMKRASM Homo sapiens K-ras oncogene protein (KRAS) mRNA, complete cds
+    LENGTH: 5775
+    E-value: 0.0
+    Score: 10250.0
+    Identities: 5272
+    
+    Alignment:
+    Query:  CTAGGCGGCGGCCGCGGCGGCGGAGGCAGCAGCGGCGGCGGCAGTGGCGGCGGCGAAGGTGGCGGCGGCTCGGCC
+            |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+    Sbjct:  CTAGGCGGCGGCCGCGGCGGCGGAGGCAGCAGCGGCGGCGGCAGTGGCGGCGGCGAAGGTGGCGGCGGCTCGGCC
+    
+    ----------------------------------------------------------------------
+    
+
+
+
+```python
+# The evalue when compared to chimpanzee is 0.0
+```
