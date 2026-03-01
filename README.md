@@ -6726,3 +6726,373 @@ plt.imshow(edges)
 ```python
 
 ```
+
+## Feature Detection 
+
+#Feature Matches
+```python
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline
+```
+
+
+```python
+def display(img, cmap = "gray"):
+    fig = plt.figure(figsize = (12, 10))
+    ax = fig.add_subplot(111)
+    ax.imshow(img, cmap = "gray")
+```
+
+
+```python
+apple_jacks = cv2.imread("Apple_Jacks.jpg", 0)
+display(apple_jacks)
+```
+
+
+![png](output_2_0.png)
+<img width="410" height="578" alt="output_2_0" src="https://github.com/user-attachments/assets/cd01bb95-7116-4f24-97a5-4647ed91effc" />
+
+
+
+```python
+cereals = cv2.imread("All_Cereal.jpeg", 0)
+display(cereals)
+```
+
+
+![png](output_3_0.png)
+<img width="709" height="494" alt="output_3_0" src="https://github.com/user-attachments/assets/724d0bab-da69-46d1-8f27-072de2b356af" />
+
+
+
+```python
+orb = cv2.ORB_create()
+
+kp1,des1 = orb.detectAndCompute(apple_jacks, mask=None)
+kp2,des2 = orb.detectAndCompute(cereals, mask=None)
+```
+
+
+```python
+bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck = True)
+matches= bf.match(des1, des2)
+```
+
+
+```python
+matches = sorted(matches, key = lambda x:x.distance)
+```
+
+
+```python
+apple_jacks_matches = cv2.drawMatches(apple_jacks, kp1, cereals, kp2, matches[:25], None, flags = 2)
+```
+
+
+```python
+display(apple_jacks_matches)
+```
+
+
+![png](output_8_0.png)
+<img width="716" height="467" alt="output_8_0" src="https://github.com/user-attachments/assets/8475caf6-21fd-4f88-89b6-3a2be0c40c11" />
+
+
+
+```python
+sift = cv2.SIFT_create()
+```
+
+
+```python
+kp1, des1 = sift.detectAndCompute(apple_jacks, None)
+kp2, des2 = sift.detectAndCompute(cereals, None)
+```
+
+
+```python
+bf = cv2.BFMatcher()
+matches = bf.knnMatch(des1, des2, k=2)
+```
+
+
+```python
+good = []
+
+for match1, match2 in matches:
+    if match1.distance < 0.75*match2.distance:
+        good.append([match1])
+```
+
+
+```python
+print("length of total matches:", len(matches))
+print("length of good matches:", len(good))
+```
+
+    length of total matches: 4323
+    length of good matches: 107
+
+
+
+```python
+sift_matches = cv2.drawMatchesKnn(apple_jacks, kp1, cereals, kp2, good, None, flags = 2)
+display(sift_matches)
+```
+
+
+![png](output_14_0.png)
+<img width="716" height="467" alt="output_14_0" src="https://github.com/user-attachments/assets/fa7b409d-76bb-4e15-beef-ab66a4fc648e" />
+
+
+
+```python
+sift = cv2.SIFT_create()
+
+kp1, des1 = sift.detectAndCompute(apple_jacks, None)
+kp2, des2 = sift.detectAndCompute(cereals, None)
+```
+
+
+```python
+flann_index_KDtree = 0 
+index_params = dict(algorithm=flann_index_KDtree, trees = 5)
+search_params = dict(checks=50)
+```
+
+
+```python
+flann = cv2.FlannBasedMatcher(index_params, search_params)
+
+matches = flann.knnMatch(des1, des2, k=2)
+
+good = []
+
+for match1, match2, in matches:
+    if match1.distance < 0.75*match2.distance:
+        good.append([match1])
+```
+
+
+```python
+flann_matches = cv2.drawMatchesKnn(apple_jacks, kp1, cereals, kp2, good, None, flags = 0)
+display(flann_matches)
+```
+
+
+![png](output_18_0.png)
+<img width="716" height="467" alt="output_18_0" src="https://github.com/user-attachments/assets/45128d5a-d493-465b-8e41-dec48780d90a" />
+
+
+
+```python
+sift = cv2.SIFT_create()
+
+kp1, des1 = sift.detectAndCompute(apple_jacks, None)
+kp2, des2 = sift.detectAndCompute(cereals, None)
+```
+
+
+```python
+flann_index_KDtree = 0 
+index_params = dict(algorithm= flann_index_KDtree, trees = 5)
+search_param = dict(checks = 50)
+```
+
+
+```python
+flann = cv2.FlannBasedMatcher(index_params, search_params)
+
+matches = flann.knnMatch(des1, des2, k = 2)
+```
+
+
+```python
+matchesMask = [[0,0] for i in range(len(matches))]
+```
+
+
+```python
+for i, (match1, match2) in enumerate(matches):
+    if match1.distance <0.75*match2.distance:
+        matchesMask[i] = [1,0]
+        
+draw_params = dict(matchColor = (0,255,0),
+                  singlePointColor = (255, 0, 0),
+                  matchesMask = matchesMask,
+                  flags = 0)
+```
+
+
+```python
+flann_matches = cv2.drawMatchesKnn(apple_jacks, kp1, cereals, kp2, matches, None, **draw_params)
+
+display(flann_matches)
+```
+
+
+![png](output_24_0.png)
+<img width="716" height="467" alt="output_24_0" src="https://github.com/user-attachments/assets/d2d040fe-1fb6-4603-a6d8-6ac51862c276" />
+
+
+
+```python
+
+```
+
+#Object Detection
+
+```python
+import cv2
+```
+
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline
+```
+
+
+```python
+full = cv2.imread("train.jpeg")
+```
+
+
+```python
+full = cv2.cvtColor(full, cv2.COLOR_BGR2RGB)
+plt.imshow(full)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7fae0b79aa90>
+
+
+
+
+![png](output_3_1.png)
+<img width="375" height="221" alt="output_3_1" src="https://github.com/user-attachments/assets/0c87b591-32c5-4a0f-880c-a6f04ab13bd4" />
+
+
+
+```python
+test = cv2.imread("test.jpeg")
+test = cv2.cvtColor(test, cv2.COLOR_BGR2RGB)
+plt.imshow(test)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7fae0af069d0>
+
+
+
+
+![png](output_4_1.png)
+<img width="375" height="222" alt="output_4_1" src="https://github.com/user-attachments/assets/9990966f-b160-4f78-a5f7-02632bb9516f" />
+
+
+
+```python
+print("Test image shape:", full.shape)
+print("Train image shape:", test.shape)
+```
+
+    Test image shape: (999, 1800, 3)
+    Train image shape: (168, 300, 3)
+
+
+
+```python
+methods = ['cv2.TM_CCOEFF', 'cv2.TM_CCOEFF_NORMED', 'cv2.TM_CCORR', 'cv2.TM_CCORR_NORMED', "cv2.TM_SQDIFF", "cv2.TM_SQDIFF_NORMED"]
+```
+
+
+```python
+for m in methods:
+    
+    test_copy = test.copy()
+    method = eval(m)
+    
+    res = cv2.matchTemplate(full, test_copy, method)
+    
+    min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+    
+    if method in [cv2.TM_SQDIFF, cv2.TM_SQDIFF_NORMED]:
+        top_left = min_loc
+    else:
+            top_left = max_loc
+            
+            height, width, channels = test_copy.shape
+            bottom_right = (top_left[0] + width, top_left[1] + height)
+            
+            cv2.rectangle(test_copy, top_left, bottom_right, (255,0,0), 10)
+            
+            plt.subplot(121)
+            plt.imshow(res)
+            plt.title("Heatmap of template matching")
+            plt.subplot(122)
+            plt.imshow(test_copy)
+            plt.title("Detection of template")
+            
+            plt.suptitle(m)
+            
+            plt.show()
+            print('\n')
+            print('\n')
+```
+
+
+![png](output_7_0.png)
+<img width="375" height="211" alt="output_7_0" src="https://github.com/user-attachments/assets/61c1820d-e06d-4b5c-885c-5c00a294585a" />
+
+
+    
+    
+    
+    
+
+
+
+![png](output_7_2.png)
+<img width="375" height="211" alt="output_7_2" src="https://github.com/user-attachments/assets/2a64fa23-b2a2-485c-9655-f91a46d68a3a" />
+
+
+    
+    
+    
+    
+
+
+
+![png](output_7_4.png)
+<img width="375" height="211" alt="output_7_4" src="https://github.com/user-attachments/assets/aa65f9bf-ca5f-44ab-bdc0-82d0432a9417" />
+
+
+    
+    
+    
+    
+
+
+
+![png](output_7_6.png)
+<img width="375" height="211" alt="output_7_6" src="https://github.com/user-attachments/assets/1c75fe94-4618-4bd2-834b-a8dc3742b4ea" />
+
+
+    
+    
+    
+    
+
+
+
+```python
+
+```
