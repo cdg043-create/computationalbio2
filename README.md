@@ -5565,3 +5565,750 @@ for alignment in blast_record.alignments[:3]:  # top 3 hits
 ```python
 # The evalue when compared to chimpanzee is 0.0
 ```
+
+## Open CV
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline
+```
+
+
+```python
+import cv2
+```
+
+
+```python
+img = cv2.imread("punch.jpg")
+```
+
+
+```python
+type(img)
+```
+
+
+
+
+    numpy.ndarray
+
+
+
+
+```python
+img_wrong = cv2.imread('wrong/path/doesnot/abcdegh.jpg')
+```
+
+
+```python
+type(img_wrong)
+```
+
+
+
+
+    NoneType
+
+
+
+
+```python
+plt.imshow(img)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7ff1d264e450>
+
+
+
+
+![png](output_6_1.png)
+<img width="375" height="223" alt="output_6_1" src="https://github.com/user-attachments/assets/a6054bfa-869e-4eaa-bc02-12ee678f2dc1" />
+
+
+
+```python
+fix_img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+```
+
+
+```python
+plt.imshow(fix_img)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7ff1d2589110>
+
+
+
+
+![png](output_8_1.png)
+<img width="375" height="223" alt="output_8_1" src="https://github.com/user-attachments/assets/09435c0a-718f-4fa8-81b4-ddf41f632173" />
+
+
+
+```python
+img_gray = cv2.imread("punch.jpg", cv2.IMREAD_GRAYSCALE)
+img_gray.shape
+```
+
+
+
+
+    (225, 400)
+
+
+
+
+```python
+plt.imshow(img_gray)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7ff1d0cf2450>
+
+
+
+
+![png](output_10_1.png)
+<img width="375" height="223" alt="output_10_1" src="https://github.com/user-attachments/assets/d6f4f3e1-aeea-4d06-9e6b-5d6d2820a4fc" />
+
+
+
+```python
+plt.imshow(img_gray, cmap = "gray")
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7ff1d0c6a590>
+
+
+
+
+![png](output_11_1.png)
+<img width="375" height="223" alt="output_11_1" src="https://github.com/user-attachments/assets/3d71a2f9-02a8-48ee-aa9b-30e30c9df767" />
+
+
+
+```python
+fix_img.shape
+```
+
+
+
+
+    (225, 400, 3)
+
+
+
+
+```python
+new_img = cv2.resize(fix_img,(1000,400))
+plt.imshow(new_img)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7ff1cf3e0590>
+
+
+
+
+![png](output_13_1.png)<img width="375" height="169" alt="output_13_1" src="https://github.com/user-attachments/assets/713b73c4-7dc8-4a34-9313-a6f991257ce4" />
+
+
+
+
+```python
+new_img.shape
+```
+
+
+
+
+    (400, 1000, 3)
+
+
+
+
+```python
+w_ratio = 0.5
+h_ratio = 0.5
+
+new_img = cv2.resize(fix_img, (0,0), fix_img, w_ratio, h_ratio)
+```
+
+
+```python
+plt.imshow(new_img)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7ff1cf34f890>
+
+
+
+
+![png](output_16_1.png)
+<img width="375" height="222" alt="output_16_1" src="https://github.com/user-attachments/assets/d7ec2532-6604-493f-88be-bc6d401f0861" />
+
+
+
+```python
+new_img.shape
+```
+
+
+
+
+    (112, 200, 3)
+
+
+
+
+```python
+flip_img = cv2.flip(fix_img, 0)
+plt.imshow(flip_img)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7ff1cf336b90>
+
+
+
+
+![png](output_18_1.png)
+<img width="375" height="223" alt="output_18_1" src="https://github.com/user-attachments/assets/50626936-d81f-4fa8-a9d7-4949b5006d4a" />
+
+
+
+```python
+flip_img2 = cv2.flip(fix_img, -1)
+plt.imshow(flip_img2)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7ff1cf2a8950>
+
+
+
+
+![png](output_19_1.png)
+<img width="375" height="223" alt="output_19_1" src="https://github.com/user-attachments/assets/f8a0d832-c680-4e98-acb8-96b55e2f7564" />
+
+
+
+```python
+type(fix_img)
+```
+
+
+
+
+    numpy.ndarray
+
+
+
+
+```python
+cv2.imwrite('punch_fixed_image.jpg', fix_img)
+```
+
+
+
+
+    True
+
+
+
+
+```python
+import cv2
+import matplotlib.pyplot as plt
+%matplotlib inline
+```
+
+
+```python
+img = cv2.imread("punch.jpg")
+```
+
+
+```python
+plt.imshow(img)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7ff1cf227d10>
+
+
+
+
+![png](output_24_1.png)
+<img width="375" height="223" alt="output_24_1" src="https://github.com/user-attachments/assets/be1714a2-e62c-4728-bb9e-aecfa8bf70dd" />
+
+
+
+```python
+img1 = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+```
+
+
+```python
+plt.imshow(img1)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7ff1cf19fdd0>
+
+
+
+
+![png](output_26_1.png)
+<img width="375" height="223" alt="output_26_1" src="https://github.com/user-attachments/assets/7f68ef7a-f67d-4ebf-bf71-f851c1db26b9" />
+
+
+
+```python
+img2 = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+```
+
+
+```python
+plt.imshow(img2)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7ff1cf117ed0>
+
+
+
+
+![png](output_28_1.png)
+<img width="375" height="223" alt="output_28_1" src="https://github.com/user-attachments/assets/fc206f73-f1b9-407e-b708-fe9357fb738a" />
+
+
+
+```python
+img3 = cv2.cvtColor(img, cv2.COLOR_BGR2HLS)
+```
+
+
+```python
+plt.imshow(img3)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7ff1cf08bf10>
+
+
+
+
+![png](output_30_1.png)
+<img width="375" height="223" alt="output_30_1" src="https://github.com/user-attachments/assets/12fa0029-0488-41a7-b87d-cc0917e06033" />
+
+
+
+```python
+img1 = cv2.imread("sadie.jpg")
+img2 = cv2.imread("punch.jpg")
+```
+
+
+```python
+plt.imshow(img1)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7ff1cec85e90>
+
+
+
+
+![png](output_32_1.png)
+<img width="209" height="252" alt="output_32_1" src="https://github.com/user-attachments/assets/2ce7e135-7e72-4cbc-b19e-855c6e6cb414" />
+
+
+
+```python
+img1 = cv2.cvtColor(img1, cv2.COLOR_BGR2RGB)
+img2 = cv2.cvtColor(img2, cv2.COLOR_BGR2RGB)
+```
+
+
+```python
+plt.imshow(img1)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7ff1cebeac90>
+
+
+
+
+![png](output_34_1.png)
+<img width="209" height="252" alt="output_34_1" src="https://github.com/user-attachments/assets/47b59c36-6ec8-4241-ae4e-0704d40df00d" />
+
+
+
+```python
+plt.imshow(img2)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7ff1ceb4cd50>
+
+
+
+
+![png](output_35_1.png)<img width="375" height="223" alt="output_35_1" src="https://github.com/user-attachments/assets/7244b817-99a8-4c7c-bca6-518c5b8baaf1" />
+
+
+
+
+```python
+img1 = cv2.resize(img1,(1200,1200))
+img2 = cv2.resize(img2,(1200,1200))
+```
+
+
+```python
+alpha=0.5
+beta=0.5
+```
+
+
+```python
+blended = cv2.addWeighted(img1,alpha,img2,beta,gamma=0)
+plt.imshow(blended)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7ff1ceb40f10>
+
+
+
+
+![png](output_38_1.png)
+<img width="263" height="252" alt="output_38_1" src="https://github.com/user-attachments/assets/36544106-885d-44b3-bf04-4585c5a4dbd1" />
+
+
+
+```python
+alpha = 0.2
+beta = 0.8
+
+blended1 = cv2.addWeighted(img1,alpha,img2,beta,0)
+plt.imshow(blended1)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7ff1cef2eb90>
+
+
+
+
+![png](output_39_1.png)
+<img width="263" height="252" alt="output_39_1" src="https://github.com/user-attachments/assets/8a8874a7-7ff3-484b-8c47-1447c3b79708" />
+
+
+
+```python
+img1 = cv2.imread("sadie.jpg")
+img2 = cv2.imread("punch.jpg")
+
+img1 = cv2.cvtColor(img1, cv2.COLOR_BGR2RGB)
+img2 = cv2.cvtColor(img2, cv2.COLOR_BGR2RGB)
+
+img2 = cv2.resize(img2,(200,200))
+```
+
+
+```python
+large_img = img1
+small_img = img2
+
+x_offset = 0 
+y_offset = 0
+
+x_end = x_offset + small_img.shape[1]
+y_end = y_offset + small_img.shape[0]
+
+large_img[y_offset:y_end, x_offset:x_end] = small_img
+
+plt.imshow(large_img)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7ff1cea29a90>
+
+
+
+
+![png](output_41_1.png)
+<img width="209" height="252" alt="output_41_1" src="https://github.com/user-attachments/assets/e4d6cb3d-ec3a-4d02-958d-0cc05074d0d3" />
+
+
+
+```python
+#https://github.com/worklifesg/Python-for-Computer-Vision-with-OpenCV-and-Deep-Learning
+```
+
+
+```python
+import cv2
+import matplotlib.pyplot as plt
+%matplotlib inline
+```
+
+
+```python
+img = cv2.imread('rainbow.jpg')
+plt.imshow(img)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7ff1cea073d0>
+
+
+
+
+![png](output_44_1.png)
+<img width="207" height="252" alt="output_44_1" src="https://github.com/user-attachments/assets/f294024a-b730-4c05-8deb-da666d221cd3" />
+
+
+
+```python
+#to read in grayscale just directly add 0
+img = cv2.imread('rainbow.jpg',0)
+plt.imshow(img,cmap='gray')
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7ff1ce95cfd0>
+
+
+
+
+![png](output_45_1.png)
+<img width="207" height="252" alt="output_45_1" src="https://github.com/user-attachments/assets/52207a96-6f11-4deb-b566-ddd1d8ef8afe" />
+
+
+
+```python
+ret1, thresh1 = cv2.threshold(img,127,255,cv2.THRESH_BINARY)
+```
+
+
+```python
+ret1
+```
+
+
+
+
+    127.0
+
+
+
+
+```python
+plt.imshow(thresh1,cmap='gray')
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7ff1ce135bd0>
+
+
+
+
+![png](output_48_1.png)
+<img width="207" height="252" alt="output_48_1" src="https://github.com/user-attachments/assets/389f5083-dee5-493c-a5e2-122af1779f2f" />
+
+
+
+```python
+#we can use BINARY_INV to inverse the limits
+#THRESH_TRUNC - if over threshold we go to whatever we set it else keep orginal value
+
+img2 = cv2.imread('rainbow.jpg',0)
+ret1, thresh1 = cv2.threshold(img2,127,255,cv2.THRESH_TRUNC)
+plt.imshow(thresh1,cmap='gray') 
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7ff1ce099c10>
+
+
+
+
+![png](output_49_1.png)
+<img width="207" height="252" alt="output_49_1" src="https://github.com/user-attachments/assets/e47e1580-5052-4c21-ab90-0d58469ba3f2" />
+
+
+
+```python
+img3 = cv2.imread('rainbow.jpg',0)
+ret1, thresh1 = cv2.threshold(img3,127,255,cv2.THRESH_TOZERO)
+plt.imshow(thresh1,cmap='gray')
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7ff1ce002710>
+
+
+
+
+![png](output_50_1.png)
+<img width="207" height="252" alt="output_50_1" src="https://github.com/user-attachments/assets/17cd6e1c-f7fa-496d-86d0-3a941141a3c2" />
+
+
+
+```python
+img_r = cv2.imread("crossword.jpg", 0)
+plt.imshow(img_r, cmap = "gray")
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7ff1cdffc390>
+
+
+
+
+![png](output_51_1.png)
+<img width="178" height="252" alt="output_51_1" src="https://github.com/user-attachments/assets/d426098b-e311-4daa-bf65-3837841827e3" />
+
+
+
+```python
+def show_pic(img):
+    fig = plt.figure(figsize=(15,15))
+    ax = fig.add_subplot(111)
+    ax.imshow(img,cmap='gray')
+```
+
+
+```python
+show_pic(img_r)
+```
+
+
+![png](output_53_0.png)
+<img width="557" height="850" alt="output_53_0" src="https://github.com/user-attachments/assets/dbf64acd-7ba1-43df-8e4f-8c5c60b5b8ce" />
+
+
+
+```python
+ret,th1 = cv2.threshold(img_r,127,255,cv2.THRESH_BINARY)
+show_pic(th1)
+```
+
+
+![png](output_54_0.png)
+<img width="557" height="850" alt="output_54_0" src="https://github.com/user-attachments/assets/bd1450f8-2ee7-44b6-b226-9368ea56a9ca" />
+
+
+
+```python
+ret,th1 = cv2.threshold(img_r,200,255,cv2.THRESH_BINARY)
+show_pic(th1)
+```
+
+
+![png](output_55_0.png)
+<img width="557" height="850" alt="output_55_0" src="https://github.com/user-attachments/assets/54be3fd1-af30-45f8-ae7e-e88d5ab1e32e" />
+
+
+
+```python
+th2 = cv2.adaptiveThreshold(img_r,255,cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY,
+                            11,8)
+show_pic(th2)
+```
+
+
+![png](output_56_0.png)
+<img width="557" height="850" alt="output_56_0" src="https://github.com/user-attachments/assets/5806128e-9b4a-453e-8b5c-bc67342e0592" />
+
+
+
+```python
+blended = cv2.addWeighted(src1=th1,alpha=0.6,
+                          src2=th2,beta=0.4,gamma=0)
+show_pic(blended)
+```
+
+
+![png](output_57_0.png)
+<img width="557" height="850" alt="output_57_0" src="https://github.com/user-attachments/assets/3f77c6fc-4942-4860-9287-f40d1baa8c3d" />
+
+
+
+```python
+th3 = cv2.adaptiveThreshold(img_r,255,cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY,
+                            11,8)
+blended = cv2.addWeighted(src1=th1,alpha=0.6,
+                          src2=th3,beta=0.4,gamma=0)
+show_pic(blended)
+     
+```
+
+
+![png](output_58_0.png)
+<img width="557" height="850" alt="output_58_0" src="https://github.com/user-attachments/assets/ed30a103-fb06-4869-8c4c-1d02f64d1f7b" />
+
+
+
+```python
+
+```
+
